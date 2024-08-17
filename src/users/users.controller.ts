@@ -3,18 +3,22 @@ import { Request } from 'express';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { GetUsersParamDto } from './dtos/get-users-params.dto';
 import { PatchUserDto } from './dtos/patch-user.dto copy';
+import { UserService } from './providers/user.service';
 
 @Controller('users')
 export class UsersController {
-    
+    constructor(private readonly userService: UserService) {
+        
+    }
+
     @Get("/:id?")
     public getUsers(
         @Param() getUsersParamDto: GetUsersParamDto,
         @Query("limit", new DefaultValuePipe(10),ParseIntPipe) limit: number,
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
     ) {
-
-        return "send a get request to users endpoint";
+        
+        return this.userService.findAll(getUsersParamDto, limit, page);
     }
 
 
